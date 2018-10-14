@@ -14,9 +14,24 @@ On a fresh clone do::
 Running tests
 -------------
 
-There are some end-to-end tests. They can be ran this way::
+There are some end-to-end tests. They can be ran this way:
 
-   pipenv run ./runtest.py -e -a
+.. code:: shell
+
+   pipenv run python runtest.py -e test/system
+
+Unit tests may also be executed, for example:
+
+.. code:: shell
+
+   pipenv run python -m unittest discover -t . -s test/unit
+
+All tests may be executed at once
+
+.. code:: shell
+
+   pipenv run python runtest.py -e -a
+
 
 
 Creating package for distribution
@@ -41,13 +56,22 @@ Uploading to pypi.org_
 
    pipenv run twine upload dist/*
 
-Synchronizing Pipfile.lock with requirements-dev.txt
+Synchronizing requirements-dev.txt with Pipfile.lock
 ----------------------------------------------------
 
 .. code:: shell
 
    pipenv lock -r --dev > requirements-dev.txt
 
+Generating HTML documentation
+-----------------------------
+
+.. code:: shell
+
+   pipenv run make html
+
+The generated documentation is writen to ``build/doc/html``, with the index
+file ``build/doc/html/index.html``.
 
 LICENSE
 -------

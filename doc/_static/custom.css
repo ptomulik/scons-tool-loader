@@ -1,0 +1,46 @@
+div.body > .section p {
+  text-align: justify;
+}
+
+div.body > .section > h1 {
+  text-decoration: underline;
+}
+
+div.admonition p.admonition-title {
+  font-size: 14px;
+  font-weight: bold;
+  display: block;
+}
+
+dl.class, dl.function, dl.exception {
+  margin: 6px 0px 6px 0px;
+  border: 1px solid #ccc;
+}
+
+dl.class > dt, dl.function > dt, dl.exception > dt {
+  padding: 12px;
+  border-bottom: 1px dashed #ccc;
+  background: #eee;
+}
+
+dl.class > dd, dl.function > dd, dl.exception > dd {
+  margin-right: 12px;
+}
+
+dl.method > dt, dl.classmethod > dt, dl.attribute > dt {
+  background: #eee;
+  padding: 4px;
+  border-bottom: 1px solid black;
+}
+
+body {
+  font-size: 14px;
+}
+
+div.highlight {
+  font-size: 13px;
+}
+
+div.sphinxsidebarwrapper {
+  border: 1px solid lightgray;
+}

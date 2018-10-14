@@ -1,5 +1,7 @@
 -i https://pypi.org/simple
-bleach==3.0.1
+alabaster==0.7.12
+babel==2.6.0
+bleach==3.0.2
 certifi==2018.8.24
 cffi==1.11.5
 chardet==3.0.4
@@ -7,14 +9,23 @@ cmarkgfm==0.4.2
 docutils==0.14
 future==0.16.0
 idna==2.7
+imagesize==1.1.0
+jinja2==2.10
+markupsafe==1.0
+packaging==18.0
 pkginfo==1.4.2
 pycparser==2.19
 pygments==2.2.0
+pyparsing==2.2.2
+pytz==2018.5
 readme-renderer==22.0
 requests-toolbelt==0.8.0
 requests==2.19.1
 scons==3.0.1
 six==1.11.0
+snowballstemmer==1.2.1
+sphinx==1.8.1
+sphinxcontrib-websupport==1.1.0
 tqdm==4.26.0
 twine==1.12.1
 urllib3==1.23

@@ -10,9 +10,13 @@ here = path.abspath(path.dirname(__file__))
 with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     readme = f.read()
 
+about = {}
+with open(path.join(here, 'lib', 'sconstool', 'loader', 'about.py')) as f:
+    exec(f.read(), about)
+
 setup(
         name='scons-tool-loader',
-        version='0.1.5',
+        version=about['__version__'],
         package_dir={'': 'lib'},
         packages=['sconstool.loader'],
         namespace_packages=['sconstool'],

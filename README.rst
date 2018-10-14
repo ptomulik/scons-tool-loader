@@ -4,8 +4,15 @@ scons-tool-loader
 .. image:: https://badge.fury.io/py/scons-tool-loader.svg
     :target: https://badge.fury.io/py/scons-tool-loader
     :alt: PyPi package version
+.. image:: https://readthedocs.org/projects/scons-tool-loader/badge/?version=latest
+    :target: https://scons-tool-loader.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+.. image:: https://travis-ci.org/ptomulik/scons-tool-loader.svg?branch=master
+    :target: https://travis-ci.org/ptomulik/scons-tool-loader
+.. image:: https://coveralls.io/repos/github/ptomulik/scons-tool-loader/badge.svg?branch=master
+    :target: https://coveralls.io/github/ptomulik/scons-tool-loader?branch=master
 
-A little module that supports loading SCons_ tools installed via pip.
+A little python package that helps loading externally managed SCons_ tools.
 
 Installation
 ------------
@@ -24,7 +31,7 @@ or, if your project uses pipenv_:
 
 Alternativelly, you may add this to your ``Pipfile``
 
-.. code-block::
+.. code-block:: ini
 
     [dev-packages]
     scons-tool-loader = "*"
@@ -33,18 +40,72 @@ This will install a namespaced package ``sconstool.loader`` in project's
 virtual environment.
 
 
-Usage example
--------------
+Usage examples
+--------------
+
+Using tools istalled into "standard" namespace
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The "standard" namespace for pip-managed SCons tools is assumed to be
+``sconstool`` namespace. In the following examples we assume that tools are
+installed as namespaced packages, under ``sconstool`` namespace. This is
+exactly how all the tools developed by the original author of the
+scons-tool-loader_ get installed.
+
+For example, the following code
+
+.. code-block:: shell
+
+   pip install scons-tool-clang
+
+will install ``clang`` tool as ``sconstool.clang`` package. Once installed, it
+may be used in a SCons script by extending default toolpath and loading the
+tool to the construction environment
 
 .. code-block:: python
 
   # SConstruct
   import sconstool.loader
   sconstool.loader.extend_toolpath()
-  # provided that scons-tool-clang is installed...
-  env = Environment(tools = ['default', 'sconstool.clang'])
-  print(env.subst("using $CC $CCVERSION"))
+  env = Environment(tools=['default', 'sconstool.clang'])
   env.Program('test.c')
+
+
+If, for some reason, fully qualified package name can't be used as the tool
+name, one may use "transparent" mode when extending toolpath
+
+.. code-block:: python
+
+  # SConstruct
+  import sconstool.loader
+  sconstool.loader.extend_toolpath(transparent=True)
+  env = Environment(tools=['default', 'clang'])
+  env.Program('test.c')
+
+The above code will still load the ``sconstool.clang`` tool.
+
+
+Using tools installed into "non-standard" namespaces
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Suppose, some tools get installed into ``vendor`` namespace. For example,
+``vendor.foo`` and ``vendor.bar`` are installed somewhere under ``sys.path``.
+These tools may be made visible to scons by using ``namespace`` parameter,
+and ``scan``.
+
+.. code-block:: python
+
+  # SConstruct
+  import sconstool.loader
+  sconstool.loader.extend_toolpath(namespace='vendor', scan=True)
+  env = Environment(tools=['default', 'sconstool.clang', 'vendor.foo', 'vendor.bar'])
+  # ...
+
+
+More documentation
+------------------
+
+See the `online documentation`_.
 
 LICENSE
 -------
@@ -73,5 +134,6 @@ SOFTWARE
 .. _SCons: http://scons.org
 .. _pipenv: https://pipenv.readthedocs.io/
 .. _pypi: https://pypi.org/
+.. _online documentation: https://scons-tool-loader.readthedocs.io/
 
 .. <!--- vim: set expandtab tabstop=2 shiftwidth=2 syntax=rst: -->
