@@ -10,12 +10,24 @@ A little module that supports loading SCons_ tools installed via pip.
 Installation
 ------------
 
-Via pipenv
-^^^^^^^^^^
+To install module from pypi_, type
 
-This should be used, if your project uses pipenv_::
+.. code-block:: shell
 
-      pipenv install scons-tool-loader
+      pip install scons-tool-loader
+
+or, if your project uses pipenv_:
+
+.. code-block:: shell
+
+      pipenv install --dev scons-tool-loader
+
+Alternativelly, you may add this to your ``Pipfile``
+
+.. code-block::
+
+    [dev-packages]
+    scons-tool-loader = "*"
 
 This will install a namespaced package ``sconstool.loader`` in project's
 virtual environment.
@@ -60,5 +72,6 @@ SOFTWARE
 .. _scons-tool-loader: https://github.com/ptomulik/scons-tool-loader
 .. _SCons: http://scons.org
 .. _pipenv: https://pipenv.readthedocs.io/
+.. _pypi: https://pypi.org/
 
 .. <!--- vim: set expandtab tabstop=2 shiftwidth=2 syntax=rst: -->

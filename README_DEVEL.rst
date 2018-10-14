@@ -41,6 +41,14 @@ Uploading to pypi.org_
 
    pipenv run twine upload dist/*
 
+Synchronizing Pipfile.lock with requirements-dev.txt
+----------------------------------------------------
+
+.. code:: shell
+
+   pipenv lock -r --dev > requirements-dev.txt
+
+
 LICENSE
 -------
 

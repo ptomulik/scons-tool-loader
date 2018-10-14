@@ -6,19 +6,14 @@ python:
   - 3.6
   - 3.7-dev
 
-addons:
-  apt:
-    packages:
-      - clang
-
-env:
-  - PIPENV_IGNORE_VIRTUALENVS=1
-
 install:
-  - pip install -U pipenv
-  - pipenv --version
-  - pipenv install --dev
-  - pipenv run python bin/downloads.py
+  - pip install -U pip
+  - pip --version
+  - pip install -r requirements-dev.txt
+  - python bin/downloads.py
+
+before_script:
+  - which python
 
 script:
-  - pipenv run python ./runtest.py -e -a
+  - python ./runtest.py -e -a

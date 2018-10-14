@@ -12,7 +12,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
         name='scons-tool-loader',
-        version='0.1.4',
+        version='0.1.5',
         package_dir={'': 'lib'},
         packages=['sconstool.loader'],
         namespace_packages=['sconstool'],
