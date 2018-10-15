@@ -9,6 +9,8 @@ scons-tool-loader
     :alt: Documentation Status
 .. image:: https://travis-ci.org/ptomulik/scons-tool-loader.svg?branch=master
     :target: https://travis-ci.org/ptomulik/scons-tool-loader
+.. image:: https://ci.appveyor.com/api/projects/status/github/ptomulik/scons-tool-loader?svg=true
+    :target: https://ci.appveyor.com/project/ptomulik/scons-tool-loader
 .. image:: https://coveralls.io/repos/github/ptomulik/scons-tool-loader/badge.svg?branch=master
     :target: https://coveralls.io/github/ptomulik/scons-tool-loader?branch=master
 .. image:: https://api.codeclimate.com/v1/badges/4c43a53855f688da6bde/maintainability

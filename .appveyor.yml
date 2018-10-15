@@ -1,0 +1,23 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\Python35"
+    - PYTHON: "C:\\Python36"
+    - PYTHON: "C:\\Python37"
+
+install:
+  - SET "PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - pip install --user -U pip
+  - pip install --user pipenv
+  - python -m pipenv install --dev
+  - python bin/downloads.py
+
+before_test:
+  - python -m pipenv --version
+  - python -m pipenv run python --version
+  - python -m pipenv run scons --version
+
+build: off
+
+test_script:
+  - python -m unittest discover -t . -s "test\\unit"
+  - python runtest.py -e "test\\system"
