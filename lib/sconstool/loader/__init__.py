@@ -55,7 +55,7 @@ def this_toolpath(transparent=False, namespace=_ns):
 
     :example: Usage of :func:`.this_toolpath`.
 
-    .. code-block: python
+    .. code-block:: python
 
         import sconstool.loader
 
@@ -81,7 +81,7 @@ def this_toolpath(transparent=False, namespace=_ns):
     :param str namespace:
         if **transparent** is true, **namespace** will be appended to every
         path of the generated toolpath list. Defaults to ``'sconstool'``,
-    :rype: list
+    :rtype: list
     """
     here = os.path.abspath(os.path.dirname(__file__))
     return [_tp(os.path.dirname(os.path.dirname(here)), transparent, namespace)]
@@ -89,6 +89,27 @@ def this_toolpath(transparent=False, namespace=_ns):
 def existing_toolpath_dirs(transparent=False, namespace=_ns, scan_dirs=None):
     """Returns a list of toolpath directories for existing directories from
     **scan_dirs**, or ``sys.path``.
+
+    :example: Usage example for :func:`.existing_toolpath_dirs`
+
+    .. code-block:: python
+
+        import sys
+        import sconstool.loader
+        sys.path = ['/path/one', '/path/three']
+
+        # assume '/path/one/sconstool' and '/path/two/sconstool' exist
+        # and '/path/three' exists but there is no '/path/three/sconstool'
+
+        print(sconstool.loader.existing_toolpath_dirs())
+        # output: ['/path/one']
+
+        print(sconstool.loader.existing_toolpath_dirs(transparent=True))
+        # output: ['/path/one/sconstool']
+
+        dirs = ['/path/one', '/path/two', '/path/three']
+        print(sconstool.loader.existing_toolpath_dirs(scan_dirs=dirs))
+        # output: ['/path/one', '/path/two']
 
     :param bool transparent:
         whether to append **namespace** to every path of the generated toolpath
@@ -112,6 +133,9 @@ def existing_toolpath_dirs(transparent=False, namespace=_ns, scan_dirs=None):
 
 def toolpath(transparent=False, namespace=_ns, this=True, scan=False, scan_dirs=None):
     """Returns a list of toolpath directories.
+
+    The returned list mixes path lists from both: :func:`.this_toolpath` and
+    :func:`existing_toolpath_dirs` for the given arguments.
 
     :param bool transparent:
         whether to append **namespace** to every path of the generated toolpath
@@ -146,8 +170,11 @@ else:
     _have_scons = True
 
 def extend_toolpath(transparent=False, namespace=_ns, this=True, scan=False, scan_dirs=None):
-    """Extends SCons toolpath whit the extra toolpath paths and returns
-    these extra toolpath paths.
+    """Appends to the default toolpath list the paths returned by
+    :func:`toolpath` for the given arguments.
+
+    .. note:: This function modifies the variable
+             ``SCons.Tool.DefaultToolpath``.
 
     :param bool transparent:
         whether to append **namespace** to every path of the generated
