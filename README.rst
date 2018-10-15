@@ -11,6 +11,9 @@ scons-tool-loader
     :target: https://travis-ci.org/ptomulik/scons-tool-loader
 .. image:: https://coveralls.io/repos/github/ptomulik/scons-tool-loader/badge.svg?branch=master
     :target: https://coveralls.io/github/ptomulik/scons-tool-loader?branch=master
+.. image:: https://api.codeclimate.com/v1/badges/4c43a53855f688da6bde/maintainability
+   :target: https://codeclimate.com/github/ptomulik/scons-tool-loader/maintainability
+   :alt: Maintainability
 
 A little python package that helps loading externally managed SCons_ tools.
 

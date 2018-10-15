@@ -1,12 +1,15 @@
 ---
 version: "2"
 checks:
-  method-count:
+  argument-count:
     config:
-      threshold: 30
+      threshold: 5
 exclude_patterns:
   - "build/"
   - "doc/"
+  - "bin/"
+  - "test/"
+  - "setup.py"
 plugins:
   pep8:
     enabled: true

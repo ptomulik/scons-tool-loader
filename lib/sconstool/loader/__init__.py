@@ -44,11 +44,18 @@ __all__ = ('this_toolpath',
 
 _ns = 'sconstool'
 
+
 def _tp(path, transparent=False, namespace=_ns):
     if transparent:
         return os.path.abspath(os.path.join(path, namespace))
     else:
         return os.path.abspath(path)
+
+
+def _append_uniq_path(sequence, value):
+    if value not in sequence:
+        sequence.append(value)
+
 
 def this_toolpath(transparent=False, namespace=_ns):
     """Returns toolpath related to this loader's installation.
@@ -57,20 +64,20 @@ def this_toolpath(transparent=False, namespace=_ns):
 
     .. code-block:: python
 
-        import sconstool.loader
+        import sconstool.loader as loader
 
         # assume sconstool.loader installed in:
         #   "/my/virtualenv/lib/python3.6/site-packages/sconstool/loader"
 
-        print(sconstool.loader.this_toolpath())
+        print(loader.this_toolpath())
         # output:
         # ["/my/virtualenv/lib/python3.6/site-packages"]
 
-        print(sconstool.loader.this_toolpath(transparent=True))
+        print(loader.this_toolpath(transparent=True))
         # output:
         # ["/my/virtualenv/lib/python3.6/site-packages/sconstool"]
 
-        print(sconstool.loader.this_toolpath(transparent=True, namespace="foo"))
+        print(loader.this_toolpath(transparent=True, namespace="foo"))
         # output:
         # ["/my/virtualenv/lib/python3.6/site-packages/foo"]
 
@@ -84,7 +91,9 @@ def this_toolpath(transparent=False, namespace=_ns):
     :rtype: list
     """
     here = os.path.abspath(os.path.dirname(__file__))
-    return [_tp(os.path.dirname(os.path.dirname(here)), transparent, namespace)]
+    dirname = os.path.dirname
+    return [_tp(dirname(dirname(here)), transparent, namespace)]
+
 
 def existing_toolpath_dirs(transparent=False, namespace=_ns, scan_dirs=None):
     """Returns a list of toolpath directories for existing directories from
@@ -126,12 +135,12 @@ def existing_toolpath_dirs(transparent=False, namespace=_ns, scan_dirs=None):
         scan_dirs = sys.path
     for p in scan_dirs:
         if os.path.isdir(os.path.join(p, namespace)):
-            tp = _tp(p, transparent, namespace)
-            if not tp in dirs:
-                dirs.append(tp)
+            _append_uniq_path(dirs, _tp(p, transparent, namespace))
     return dirs
 
-def toolpath(transparent=False, namespace=_ns, this=True, scan=False, scan_dirs=None):
+
+def toolpath(transparent=False, namespace=_ns, this=True, scan=False,
+             scan_dirs=None):
     """Returns a list of toolpath directories.
 
     The returned list mixes path lists from both: :func:`.this_toolpath` and
@@ -162,6 +171,7 @@ def toolpath(transparent=False, namespace=_ns, this=True, scan=False, scan_dirs=
         tp = this_toolpath(transparent, namespace) + tp
     return tp
 
+
 try:
     import SCons.Tool
 except ImportError:
@@ -169,7 +179,9 @@ except ImportError:
 else:
     _have_scons = True
 
-def extend_toolpath(transparent=False, namespace=_ns, this=True, scan=False, scan_dirs=None):
+
+def extend_toolpath(transparent=False, namespace=_ns, this=True, scan=False,
+                    scan_dirs=None):
     """Appends to the default toolpath list the paths returned by
     :func:`toolpath` for the given arguments.
 
@@ -198,8 +210,10 @@ def extend_toolpath(transparent=False, namespace=_ns, this=True, scan=False, sca
     if _have_scons:
         SCons.Tool.DefaultToolpath.extend(tp)
     else:
-        warnings.warn("No SCons available. Can't extend SCons.Tool.DefaultToolpath.")
+        warnings.warn("No SCons available. " +
+                      "Can't extend SCons.Tool.DefaultToolpath.")
     return tp
+
 
 # Local Variables:
 # tab-width:4
