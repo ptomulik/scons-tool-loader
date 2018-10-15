@@ -19,5 +19,5 @@ before_test:
 build: off
 
 test_script:
-  - python -m unittest discover -t . -s "test\\unit"
-  - python runtest.py -e "test\\system"
+  - python -m pipenv run python -m unittest discover -t . -s "test\\unit"
+  - python -m pipenv run python runtest.py -e "test\\system"
