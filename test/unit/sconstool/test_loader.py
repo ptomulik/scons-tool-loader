@@ -30,6 +30,12 @@ import sconstool.loader as loader
 import contextlib
 
 
+def _p(p):
+    pieces = p.split(r'/')
+    if sys.platform == 'win32' and pieces and not pieces[0]:
+        pieces[0] = 'C:\\'
+    return os.path.join(*pieces)
+
 class this_toolpath_Tests(unittest.TestCase):
     def test__without_args(self):
         tp = loader.this_toolpath()
@@ -59,53 +65,53 @@ class existsing_toolpath_dirs_Tests(unittest.TestCase):
 
     def existing_dirs(self, namespace='sconstool'):
         return [
-            '/existing/dir/one',        '/existing/dir/one/%s' % namespace,
-            '/existing/dir/two',        # no sconstool within it
-            '/another/existing/dir',    '/another/existing/dir/%s' % namespace,
+            _p('/existing/dir/one'),        _p('/existing/dir/one/%s' % namespace),
+            _p('/existing/dir/two'),        # no sconstool within it
+            _p('/another/existing/dir'),    _p('/another/existing/dir/%s' % namespace),
         ]
 
     def fake_isdir(self, namespace='sconstool'):
         return lambda path: path in self.existing_dirs(namespace)
 
     def test__without_args(self):
-        syspath = [ '/existing/dir/one', '/existing/dir/two', '/inexistent/dir' ]
+        syspath = [ _p('/existing/dir/one'), _p('/existing/dir/two'), _p('/inexistent/dir') ]
         with mock.patch('sys.path', new=syspath), \
              mock.patch('os.path.isdir', side_effect = self.fake_isdir()):
-            self.assertEqual(loader.existing_toolpath_dirs(), ['/existing/dir/one'])
+            self.assertEqual(loader.existing_toolpath_dirs(), [_p('/existing/dir/one')])
 
     def test__with_transparent(self):
-        syspath = [ '/existing/dir/one', '/existing/dir/two', '/inexistent/dir' ]
+        syspath = [ _p('/existing/dir/one'), _p('/existing/dir/two'), _p('/inexistent/dir') ]
         with mock.patch('sys.path', new=syspath), \
              mock.patch('os.path.isdir', side_effect = self.fake_isdir()):
-            self.assertEqual(loader.existing_toolpath_dirs(transparent=True), ['/existing/dir/one/sconstool'])
+            self.assertEqual(loader.existing_toolpath_dirs(transparent=True), [_p('/existing/dir/one/sconstool')])
 
     def test__with_namespace(self):
-        syspath = [ '/existing/dir/one', '/existing/dir/two', '/inexistent/dir' ]
+        syspath = [ _p('/existing/dir/one'), _p('/existing/dir/two'), _p('/inexistent/dir') ]
         with mock.patch('sys.path', new=syspath), \
              mock.patch('os.path.isdir', side_effect = self.fake_isdir(namespace='foo')):
-            self.assertEqual(loader.existing_toolpath_dirs(namespace='foo'), ['/existing/dir/one'])
+            self.assertEqual(loader.existing_toolpath_dirs(namespace='foo'), [_p('/existing/dir/one')])
             self.assertEqual(loader.existing_toolpath_dirs(namespace='bar'), [])
 
     def test__with_transparent_and_namespace(self):
-        syspath = [ '/existing/dir/one', '/existing/dir/two', '/inexistent/dir' ]
+        syspath = [ _p('/existing/dir/one'), _p('/existing/dir/two'), _p('/inexistent/dir') ]
         with mock.patch('sys.path', new=syspath), \
              mock.patch('os.path.isdir', side_effect = self.fake_isdir(namespace='foo')):
-            self.assertEqual(loader.existing_toolpath_dirs(transparent=True, namespace='foo'), ['/existing/dir/one/foo'])
+            self.assertEqual(loader.existing_toolpath_dirs(transparent=True, namespace='foo'), [_p('/existing/dir/one/foo')])
             self.assertEqual(loader.existing_toolpath_dirs(transparent=True, namespace='bar'), [])
 
     def test__with_transparent_namespace_and_path(self):
-        syspath = [ '/existing/dir/one', '/existing/dir/two', '/inexistent/dir' ]
+        syspath = [ _p('/existing/dir/one'), _p('/existing/dir/two'), _p('/inexistent/dir') ]
         with mock.patch('os.path.isdir', side_effect = self.fake_isdir(namespace='foo')):
-            scan_dirs = syspath + ['/another/existing/dir']
-            self.assertEqual(loader.existing_toolpath_dirs(transparent=True, namespace='foo', scan_dirs=scan_dirs), ['/existing/dir/one/foo', '/another/existing/dir/foo'])
+            scan_dirs = syspath + [_p('/another/existing/dir')]
+            self.assertEqual(loader.existing_toolpath_dirs(transparent=True, namespace='foo', scan_dirs=scan_dirs), [_p('/existing/dir/one/foo'), _p('/another/existing/dir/foo')])
             self.assertEqual(loader.existing_toolpath_dirs(transparent=True, namespace='bar', scan_dirs=scan_dirs), [])
 
 class toolpath_Tests(unittest.TestCase):
     def existing_dirs(self, namespace='sconstool'):
         return [
-            '/existing/dir/one',        '/existing/dir/one/%s' % namespace,
-            '/existing/dir/two',        # no sconstool within it
-            '/another/existing/dir',    '/another/existing/dir/%s' % namespace,
+            _p('/existing/dir/one'),        _p('/existing/dir/one/%s' % namespace),
+            _p('/existing/dir/two'),        # no sconstool within it
+            _p('/another/existing/dir'),    _p('/another/existing/dir/%s' % namespace),
         ]
 
     def fake_isdir(self, namespace='sconstool'):
@@ -121,7 +127,7 @@ class toolpath_Tests(unittest.TestCase):
         self.assertEqual(loader.toolpath(transparent=True, namespace='foo', this=False), [])
 
     def test__with_scan(self):
-        syspath = [ '/existing/dir/one', '/existing/dir/two', '/inexistent/dir' ]
+        syspath = [ _p('/existing/dir/one'), _p('/existing/dir/two'), _p('/inexistent/dir') ]
         with mock.patch('sys.path'), \
              mock.patch('os.path.isdir', side_effect = self.fake_isdir()):
             sys.path = syspath
@@ -137,9 +143,9 @@ class toolpath_Tests(unittest.TestCase):
 class extend_toolpath_Tests(unittest.TestCase):
     def existing_dirs(self, namespace='sconstool'):
         return [
-            '/existing/dir/one',        '/existing/dir/one/%s' % namespace,
-            '/existing/dir/two',        # no sconstool within it
-            '/another/existing/dir',    '/another/existing/dir/%s' % namespace,
+            _p('/existing/dir/one'),        _p('/existing/dir/one/%s' % namespace),
+            _p('/existing/dir/two'),        # no sconstool within it
+            _p('/another/existing/dir'),    _p('/another/existing/dir/%s' % namespace),
         ]
 
     def fake_isdir(self, namespace='sconstool'):
@@ -167,21 +173,21 @@ class extend_toolpath_Tests(unittest.TestCase):
                         {'transparent': True, 'namespace': 'foo', 'this': False, 'scan': True},
                   ]:
             with mock.patch('sconstool.loader._have_scons', new=True), \
-                 self.default_toolpath(['/default/toolpath']):
+                 self.default_toolpath([_p('/default/toolpath')]):
                 msg =  ("extend_toolpath(%s)" % ', '.join([("%s=%s" % (k, repr(v))) for k,v in kw.items()]))
                 retval = loader.extend_toolpath(**kw)
                 retval_expect = loader.toolpath(**kw)
                 self.assertEqual(retval, retval_expect, msg)
                 side = loader.SCons.Tool.DefaultToolpath
-                side_expect = ['/default/toolpath'] + retval_expect
+                side_expect = [_p('/default/toolpath')] + retval_expect
                 self.assertEqual(side, side_expect, msg)
 
     def test__warning(self):
-        with self.default_toolpath(['/default/toolpath']), \
+        with self.default_toolpath([_p('/default/toolpath')]), \
              mock.patch('sconstool.loader._have_scons', new=False), \
              mock.patch('warnings.warn') as warn:
                  self.assertEqual(loader.extend_toolpath(), loader.toolpath())
-                 self.assertEqual(loader.SCons.Tool.DefaultToolpath, ['/default/toolpath']) # no side effects
+                 self.assertEqual(loader.SCons.Tool.DefaultToolpath, [_p('/default/toolpath')]) # no side effects
                  warn.assert_called_once_with("No SCons available. Can't extend SCons.Tool.DefaultToolpath.")
 
 

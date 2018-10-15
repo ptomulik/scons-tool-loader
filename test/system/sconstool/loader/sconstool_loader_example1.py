@@ -24,8 +24,12 @@
 
 import TestSCons
 import re
+import sys
 
-test = TestSCons.TestSCons()
+if sys.platform == 'win32':
+    test = TestSCons.TestSCons(program='scons.bat', interpreter=None)
+else:
+    test = TestSCons.TestSCons()
 
 test.write('SConstruct', r"""\
 from sconstool.loader import extend_toolpath
