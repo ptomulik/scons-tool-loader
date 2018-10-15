@@ -33,8 +33,8 @@ import contextlib
 def _p(p):
     pieces = p.split(r'/')
     if sys.platform == 'win32' and pieces and not pieces[0]:
-        pieces[0] = 'C:\\'
-    return os.path.join(*pieces)
+        pieces[0] = 'C:'
+    return os.path.sep.join(pieces)
 
 class this_toolpath_Tests(unittest.TestCase):
     def test__without_args(self):
