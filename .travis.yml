@@ -2,6 +2,7 @@ language:
   python
 
 python:
+  - 2.7
   - 3.5
   - 3.6
   - 3.7-dev
@@ -20,7 +21,7 @@ before_script:
 
 script:
   - coverage run --source=sconstool.loader -m unittest discover -t . -s test/unit
-  - python runtest.py -e test/system/
+  - python runtest.py -e test/system/ || [ $? == 2 ]
 
 after_script:
   - coveralls

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 #
 # Copyright (c) 2014-2018 by Paweł Tomulik <ptomulik@meil.pw.edu.pl>
@@ -76,6 +77,8 @@ test.must_contain('xxx.foo', r"""This is vendor output""")
 
 test.run(['-Q', '-c'])
 
+test.must_not_exist('xxx.foo')
+
 ### Local site_tools should be preferred over the external ones ###
 
 _build_py_ = test.workpath('site_scons/site_tools/foo/build.py')
@@ -110,21 +113,7 @@ test.must_contain('xxx.foo', r"""This is site output""")
 
 test.run(['-Q', '-c'])
 
-### To prefer vendor over site tool, we may use namespaced package as tool name ###
-
-test.write('SConstruct', r"""
-from sconstool.loader import extend_toolpath
-extend_toolpath(scan=True, scan_dirs=['vendor'])
-env = Environment(tools=['sconstool.foo'])
-foo = env.Foo('xxx')
-""" % locals())
-
-test.run(['-Q'])
-
-test.must_exist('xxx.foo')
-test.must_contain('xxx.foo', r"""This is vendor output""")
-
-test.run(['-Q', '-c'])
+test.must_not_exist('xxx.foo')
 
 test.pass_test()
 

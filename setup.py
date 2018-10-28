@@ -3,15 +3,23 @@
 """
 
 from setuptools import setup
-from os import path
+import os
+import sys
 
-here = path.abspath(path.dirname(__file__))
+if sys.version_info < (3, 0):
+    from io import open as uopen
+else:
+    uopen = open
 
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+here = os.path.abspath(os.path.dirname(__file__))
+
+readme_rst = os.path.join(here, 'README.rst')
+with uopen(readme_rst, encoding='utf-8') as f:
     readme = f.read()
 
 about = {}
-with open(path.join(here, 'lib', 'sconstool', 'loader', 'about.py')) as f:
+about_py = os.path.join(here, 'lib', 'sconstool', 'loader', 'about.py')
+with open(about_py) as f:
     exec(f.read(), about)
 
 setup(
@@ -20,7 +28,8 @@ setup(
         package_dir={'': 'lib'},
         packages=['sconstool.loader'],
         namespace_packages=['sconstool'],
-        description='A little module that helps loading SCons tools installed via pip',
+        description='A little module that helps loading SCons tools ' +
+                    'installed via pip',
         long_description=readme,
         long_description_content_type='text/x-rst',
         url='https://github.com/ptomulik/scons-tool-loader',

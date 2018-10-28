@@ -24,11 +24,15 @@
 
 import os
 import sys
-import unittest
-import unittest.mock as mock
-import sconstool.loader as loader
 import contextlib
+if sys.version_info < (3, 0):
+    import unittest2 as unittest
+    import mock
+else:
+    import unittest
+    import unittest.mock as mock
 
+import sconstool.loader as loader
 
 def _p(p):
     pieces = p.split(r'/')
