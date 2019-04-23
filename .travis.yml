@@ -7,10 +7,14 @@ python:
   - 3.6
   - 3.7-dev
 
+before_install:
+  - export REQUIREMENTS_TXT=`python -c 'import sys;print("requirements" + str(sys.version_info.major) + "-dev.txt")'`
+  - echo "REQUIREMENTS_TXT=$REQUIREMENTS_TXT"
+
 install:
   - pip install -U pip
   - pip --version
-  - pip install -r requirements-dev.txt
+  - pip install -r "$REQUIREMENTS_TXT"
   - pip install coveralls
   - pip install coverage
   - pip install -e .
