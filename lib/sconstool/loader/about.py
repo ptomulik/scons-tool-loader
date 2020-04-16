@@ -1,7 +1,7 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 """Version information, etc."""
 
-#  DskLayout version info
+# version info
 __version__ = '0.1.10'
 """Package version as a string."""
 
