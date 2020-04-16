@@ -1,7 +1,8 @@
-#! /usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 #
-# Copyright (c) 2014-2018 by Pawel Tomulik
+# Copyright (c) 2018-2020 by Paweł Tomulik
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -47,12 +48,10 @@ def scons_test_version_string(s):
 
 def untar(tar, **kw):
     # Options
-    try:                strip_components = kw['strip_components']
-    except KeyError:    strip_components = 0
-    try:                member_name_filter = kw['member_name_filter']
-    except KeyError:    member_name_filter = lambda x : True
-    try:                path = kw['path']
-    except KeyError:    path = '.'
+    strip_components = kw.get('strip_components', 0)
+    member_name_filter = kw.get('member_name_filter', lambda x: True)
+    path = kw.get('path', '.')
+
     # Download the tar file
     members = [m for m in tar.getmembers() if len(m.name.split('/')) > strip_components]
     if strip_components > 0:
@@ -94,7 +93,7 @@ def download_scons_test(**kw):
 
     if clean:
         info("cleaning scons-test", **kw)
-        for f in ['runtest.py', 'testing']:
+        for f in ['runtest', 'runtest.py', 'testing']:
             ff = os.path.join(destdir,f)
             if os.path.exists(ff):
                 info("removing '%s'" % ff, **kw)
@@ -108,7 +107,11 @@ def download_scons_test(**kw):
     info("downloading '%s' -> '%s'" % (url, destdir))
     member_name_filter = lambda s : re.match('(?:^runtest\.py$|testing/)', s)
     urluntar(url, path = destdir, strip_components = 1, member_name_filter = member_name_filter)
+    shutil.move(os.path.join(destdir, 'runtest.py'), os.path.join(destdir, 'runtest'))
     return 0
+
+def is_for_py2():
+    return sys.version_info.major == 2 or (os.getenv('TOXENV') or '').startswith('py2')
 
 # The script...
 _script = os.path.basename(sys.argv[0])
@@ -121,11 +124,11 @@ _all_packages = [ 'scons-test' ]
 _default_packages = [ 'scons-test', ]
 
 # scons versions other than x.y.z
-_scons_versions = ['master', '2.1.0.final.0' ]
-_default_scons_version = _scons_versions[0]
-
-# scons-test
-_default_scons_test_version = _scons_versions[0]
+_scons_versions = ['master', '2.1.0.final.0']
+# default scons version
+_default_scons_version = '3.0.5' if is_for_py2() else _scons_versions[0]
+# default scons-test version
+_default_scons_test_version = _default_scons_version
 
 _parser = argparse.ArgumentParser(
         prog=_script,
@@ -163,7 +166,7 @@ def main():
         if pkg.lower() == 'scons-test':
             download_scons_test(**vars(_args))
         else:
-            warn("unsupported package: %r")
+            warn("unsupported package: %r" % pkg)
             return 2
     return 0
 

@@ -5,7 +5,9 @@ python:
   - 2.7
   - 3.5
   - 3.6
-  - 3.7-dev
+  - 3.7
+  - 3.8
+  - 3.9-dev
 
 before_install:
   - export REQUIREMENTS_TXT=`python -c 'import sys;print("requirements" + str(sys.version_info.major) + "-dev.txt")'`
@@ -25,7 +27,7 @@ before_script:
 
 script:
   - coverage run --source=sconstool.loader -m unittest discover -t . -s test/unit
-  - python runtest.py -e test/system/ || [ $? == 2 ]
+  - TESTCOMMON_PASS_SKIPS=1 python runtest --verbose=2 -e test/system
 
 after_script:
   - coveralls
