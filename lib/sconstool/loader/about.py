@@ -2,7 +2,7 @@
 """Version information, etc."""
 
 # version info
-__version__ = '0.1.10'
+__version__ = '0.2.0'
 """Package version as a string."""
 
 # Local Variables:
